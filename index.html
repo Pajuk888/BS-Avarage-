@@ -55,7 +55,7 @@
 <body>
   <div class="container">
     <h1>Average Calculator</h1>
-    <input type="text" id="numbersInput" placeholder="Enter numbers separated by spaces">
+    <input type="text" id="numbersInput" placeholder="Enter numbers (e.g., 25 23 27 or 25+23+27)">
     <button onclick="calculateAverage()">Calculate Average</button>
     <div id="result" class="result"></div>
     <div id="error" class="error"></div>
@@ -66,29 +66,34 @@
       const input = document.getElementById('numbersInput').value.trim();
       const resultDiv = document.getElementById('result');
       const errorDiv = document.getElementById('error');
-      
+
       // Clear previous results
       resultDiv.textContent = '';
       errorDiv.textContent = '';
-      
-      if (input === '') {
-        errorDiv.textContent = 'Please enter numbers separated by spaces.';
-        return;
-      }
-      
-      // Parse numbers from input
-      const numbers = input.split(' ').map(num => parseFloat(num)).filter(num => !isNaN(num));
-      
-      if (numbers.length === 0) {
-        errorDiv.textContent = 'Invalid input! Please enter valid numbers separated by spaces.';
-        return;
-      }
-      
-      // Calculate average
-      const sum = numbers.reduce((a, b) => a + b, 0);
-      const average = sum / numbers.length;
 
-      resultDiv.textContent = `Average: ${average.toFixed(2)}`;
+      if (input === '') {
+        errorDiv.textContent = 'Please enter numbers in the correct format.';
+        return;
+      }
+
+      // Normalize the input by replacing '+' with spaces
+      const normalizedInput = input.replace(/\+/g, ' ');
+
+      // Split the input into an array of numbers
+      const numbers = normalizedInput.split(' ')
+        .map(num => parseFloat(num))
+        .filter(num => !isNaN(num));
+
+      if (numbers.length === 0) {
+        errorDiv.textContent = 'Invalid input! Please enter valid numbers.';
+        return;
+      }
+
+      // Calculate the average and round it to the nearest whole number
+      const sum = numbers.reduce((a, b) => a + b, 0);
+      const average = Math.round(sum / numbers.length);
+
+      resultDiv.textContent = `Average: ${average}`;
     }
   </script>
 </body>
