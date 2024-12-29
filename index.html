@@ -21,13 +21,22 @@
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
     input {
-      width: 100%;
+      flex: 1;
       padding: 10px;
-      margin: 10px 0;
       font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      text-align: center;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
     }
     button {
       padding: 10px 20px;
@@ -59,59 +68,62 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
+    .reset-btn {
+      cursor: pointer;
+      color: red;
+      font-size: 14px;
+      text-decoration: underline;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Average Calculator</h1>
-    <input type="text" id="numbersInput" placeholder="Enter numbers (e.g., 25 23 27 or 25+23+27)">
+    <div class="row">
+      <input type="number" id="num1" placeholder="Number 1">
+      <input type="number" id="num2" placeholder="Number 2">
+      <input type="number" id="num3" placeholder="Number 3">
+    </div>
     <button onclick="calculateAverage()">Calculate Average</button>
     <div id="result" class="result"></div>
     <div id="error" class="error"></div>
     <div class="history">
       <div class="history-title">History:</div>
       <ul id="historyList"></ul>
+      <div class="reset-btn" onclick="resetHistory()">Reset History</div>
     </div>
   </div>
 
   <script>
     function calculateAverage() {
-      const input = document.getElementById('numbersInput').value.trim();
+      const num1 = parseFloat(document.getElementById('num1').value) || 0;
+      const num2 = parseFloat(document.getElementById('num2').value) || 0;
+      const num3 = parseFloat(document.getElementById('num3').value) || 0;
+
       const resultDiv = document.getElementById('result');
       const errorDiv = document.getElementById('error');
       const historyList = document.getElementById('historyList');
 
-      // Clear previous results and error messages
+      // Clear previous results and errors
       resultDiv.textContent = '';
       errorDiv.textContent = '';
 
-      if (input === '') {
-        errorDiv.textContent = 'Please enter numbers in the correct format.';
+      if (!document.getElementById('num1').value && !document.getElementById('num2').value && !document.getElementById('num3').value) {
+        errorDiv.textContent = 'Please enter at least one valid number.';
         return;
       }
 
-      // Normalize the input by replacing '+' with spaces
-      const normalizedInput = input.replace(/\+/g, ' ');
+      // Calculate the average and round it
+      const sum = num1 + num2 + num3;
+      const average = Math.round(sum / (num1 !== 0 + num2 !== 0 + num3 !== 0));
 
-      // Split the input into an array of numbers
-      const numbers = normalizedInput.split(' ')
-        .map(num => parseFloat(num))
-        .filter(num => !isNaN(num));
-
-      if (numbers.length === 0) {
-        errorDiv.textContent = 'Invalid input! Please enter valid numbers.';
-        return;
-      }
-
-      // Calculate the average and round it to the nearest whole number
-      const sum = numbers.reduce((a, b) => a + b, 0);
-      const average = Math.round(sum / numbers.length);
-
-      // Display the result
       resultDiv.textContent = `Average: ${average}`;
 
-      // Clear the input field
-      document.getElementById('numbersInput').value = '';
+      // Clear input fields
+      document.getElementById('num1').value = '';
+      document.getElementById('num2').value = '';
+      document.getElementById('num3').value = '';
 
       // Add to history with timestamp
       const now = new Date();
@@ -119,6 +131,13 @@
       const historyItem = document.createElement('li');
       historyItem.textContent = `${timestamp} AVG=${average}`;
       historyList.appendChild(historyItem);
+    }
+
+    function resetHistory() {
+      if (confirm('Are you sure you want to reset all history?')) {
+        const historyList = document.getElementById('historyList');
+        historyList.innerHTML = '';
+      }
     }
   </script>
 </body>
