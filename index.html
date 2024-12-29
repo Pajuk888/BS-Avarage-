@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Average Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      background-color: #f9f9f9;
+    }
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Average Calculator</h1>
+    <input type="text" id="numbersInput" placeholder="Enter numbers separated by spaces">
+    <button onclick="calculateAverage()">Calculate Average</button>
+    <div id="result" class="result"></div>
+    <div id="error" class="error"></div>
+  </div>
+
+  <script>
+    function calculateAverage() {
+      const input = document.getElementById('numbersInput').value.trim();
+      const resultDiv = document.getElementById('result');
+      const errorDiv = document.getElementById('error');
+      
+      // Clear previous results
+      resultDiv.textContent = '';
+      errorDiv.textContent = '';
+      
+      if (input === '') {
+        errorDiv.textContent = 'Please enter numbers separated by spaces.';
+        return;
+      }
+      
+      // Parse numbers from input
+      const numbers = input.split(' ').map(num => parseFloat(num)).filter(num => !isNaN(num));
+      
+      if (numbers.length === 0) {
+        errorDiv.textContent = 'Invalid input! Please enter valid numbers separated by spaces.';
+        return;
+      }
+      
+      // Calculate average
+      const sum = numbers.reduce((a, b) => a + b, 0);
+      const average = sum / numbers.length;
+
+      resultDiv.textContent = `Average: ${average.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>
