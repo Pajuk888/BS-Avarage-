@@ -28,7 +28,7 @@
       margin-bottom: 10px;
     }
     input {
-      width: 30%; /* Adjust the width to make fields smaller */
+      width: 30%;
       padding: 10px;
       font-size: 16px;
       border: 1px solid #ccc;
@@ -94,9 +94,15 @@
 
   <script>
     function calculateAverage() {
-      const num1 = parseFloat(document.getElementById('num1').value) || 0;
-      const num2 = parseFloat(document.getElementById('num2').value) || 0;
-      const num3 = parseFloat(document.getElementById('num3').value) || 0;
+      // Retrieve input values
+      const num1 = document.getElementById('num1').value.trim();
+      const num2 = document.getElementById('num2').value.trim();
+      const num3 = document.getElementById('num3').value.trim();
+
+      // Parse numbers, ignore empty fields
+      const numbers = [num1, num2, num3]
+        .map(val => parseFloat(val))
+        .filter(val => !isNaN(val));
 
       const resultDiv = document.getElementById('result');
       const errorDiv = document.getElementById('error');
@@ -106,14 +112,15 @@
       resultDiv.textContent = '';
       errorDiv.textContent = '';
 
-      if (!document.getElementById('num1').value && !document.getElementById('num2').value && !document.getElementById('num3').value) {
+      // Check if any valid numbers were entered
+      if (numbers.length === 0) {
         errorDiv.textContent = 'Please enter at least one valid number.';
         return;
       }
 
-      // Calculate the average and round it
-      const sum = num1 + num2 + num3;
-      const average = Math.round(sum / (num1 !== 0 + num2 !== 0 + num3 !== 0));
+      // Calculate average and round it
+      const sum = numbers.reduce((a, b) => a + b, 0);
+      const average = Math.round(sum / numbers.length);
 
       resultDiv.textContent = `Average: ${average}`;
 
